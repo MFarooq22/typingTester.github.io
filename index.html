@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed</title>
+    <!-- font link  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <style>
+        *{margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Josefin Sans', sans-serif;}
+
+        .mainDiv{
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #3498db;
+        }
+        .centerDiv{
+            text-align: center;
+        }
+
+        h1{
+            text-transform: capitalize;
+            text-shadow: 1px 2px 3px #2980b9;
+            color: #ecf0f1;
+            font-size: 2.1rem;
+            margin-bottom: 30px;
+        }
+
+        textarea{
+            background-color: #444;
+            color: white;
+            border: 20px solid #34495e;
+            border-radius: 5px 10px 0 0;
+            box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
+        }
+
+        .mainbtn{
+            padding: 12px 30px;
+            border-radius: 15px;
+            margin-top: 1rem;
+            border: 5px solid #2980b9;
+        }
+
+        @media only screen and (max-width: 1150px) {
+  textarea{
+      width:80%;
+      height: 80%;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="mainDiv">
+        <div class="centerDiv">
+            <h1>Welcome To Typing Speed Test</h1>
+            <h2 id="msg"></h2>
+            <br>
+            <textarea name="" id="myWords" cols="100" rows="10" placeholder="write here to check your speed :)"></textarea>
+            <br>
+            <button id="btn" class="mainbtn">Start</button>
+        </div>
+    </div>
+    
+
+    <script>
+        const setOfWords = [
+            "An adverb modifies or describes a verb, an adjective, or another adverb.",
+            "An adjective modifies or describes a noun or pronoun. i.e: old, pretty, smart, tall,",
+            "A proposition is a relationship between a noun or pronoun and other words in a sentence."
+        ];
+
+        const msg = document.getElementById('msg');
+        const typeWords = document.getElementById('myWords');
+        const btn = document.getElementById('btn');
+        let startTime, endTime;
+
+        const playGame = () => {
+            let randomNumber = Math.floor(Math.random()*setOfWords.length);
+            msg.innerText = setOfWords[randomNumber];
+            let date = new Date();
+            startTime = date.getTime();
+            btn.innerText = 'Done';
+        }
+        
+        const endGame = () => {
+            let date = new Date();
+            endTime = date.getTime();
+            let totalTime = ((endTime - startTime)/1000);
+            // console.log(totalTime);
+
+            let totalStr = typeWords.value;
+            let wordCount = wordCounter(totalStr);
+
+            let speed = Math.floor((wordCount / totalTime) * 60) ;
+
+            let finalMsg = "you typed total at " +speed+ " words per minutes ";
+
+            finalMsg += compareWords(msg.innerText,totalStr);
+            msg.innerText = finalMsg;
+            
+        }
+
+        const compareWords = (str1,str2) => {
+            let words1 = str1.split(" ");
+            let words2 = str2.split(" ");
+            let cnt = 0;
+            
+            // arrayName then foreach then it will take whole function with value and index no. of that array 
+            words1.forEach(function (item, index){
+                if(item == words2[index]){
+                    cnt++;
+                }
+            })
+
+            let errorWords = (words1.length - cnt);
+            return (cnt + " correct out of " + words1.length + " words and the total number of error are " + errorWords + "." );
+        }
+
+        const wordCounter = (str) => {
+            let responce = str.split(" ").length;
+            // console.log(responce);
+            return responce;
+        }
+
+        btn.addEventListener('click', function () {
+            if(this.innerText == 'Start'){
+                typeWords.disabled = false;
+                playGame();
+            }else if (this.innerText == 'Done'){
+                typeWords.disabled = true;
+                btn.innerText = 'Start';
+                endGame();
+            }
+        });
+
+    </script>
+
+
+
+
+
+
+    <!-- dynamic typing test  -->
+    <!-- 1: when user pressed start button then only active the textarea else disabled it and
+    vice-versa.
+    2: Every time a new set of lines on top. Whenwere a start button is pressed. Not the
+    Done one.
+    3: get the time and change the button text to Done.
+    4: get the end time when user clicked on Done button. find the total time taken.
+    5: find the total words on the setofwords.
+    6: Find the speed of the user and show it on top when user clicked on Done.
+    7: then call the comparewords fun and find how many words are matching and how many not.
+    Display the result on top with speed. -->
+</body>
+</html>
